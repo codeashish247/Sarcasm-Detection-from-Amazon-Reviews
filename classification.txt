@@ -1,0 +1,27 @@
+from sklearn import svm
+
+
+def get_feature_vector(features_list):
+    feature_vector = list(map(list, zip(*features_list)))
+    return feature_vector
+
+
+def get_classifier(sarc_train, reg_train):
+    clf = svm.SVC()
+    X = sarc_train + reg_train
+    Y = [1]*len(sarc_train) + [0]*len(reg_train)
+    clf.fit(X, Y)
+    return clf
+
+
+def test_classifier(clf, sarc_test, reg_test):
+    sarc_count = sum(clf.predict(sarc_test))
+    reg_count = sum(clf.predict(reg_test))
+    reg_count = len(reg_test)-reg_count
+
+    sarc_count = float(sarc_count*100)/len(sarc_test)
+    reg_count = float(reg_count*100)/len(reg_test)
+    print()
+    print('Accuracy of classifying sarcastic reviews is {}%'.format(sarc_count))
+    print('Accuracy of classifying regular reviews is {}%'.format(reg_count))
+    print('Overall accuracy is {}%'.format((sarc_count+reg_count)/2))

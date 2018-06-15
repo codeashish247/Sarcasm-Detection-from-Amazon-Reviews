@@ -1,0 +1,15 @@
+import itertools
+def flatten(l):
+    res = []
+    for i in l:
+        if isinstance(i, list):
+            res.extend(i)
+        else:
+            res.append(i)
+    return res
+
+a = [1, 2, 3]
+b = [4, 5, 6]
+c = [[100, 200, 300], [500, 600, 700]]
+
+

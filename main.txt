@@ -1,0 +1,38 @@
+import dataset
+import sentiment_features
+import classification
+
+# Loading dataset
+sarc_train, sarc_test, reg_train, reg_test = dataset.load_dataset()
+
+# Sentiment features
+print('Preparing sentiment score vectors')
+sarc_train_sent = sentiment_features.get_sentiment_score_list(sarc_train)
+sarc_test_sent = sentiment_features.get_sentiment_score_list(sarc_test)
+reg_train_sent = sentiment_features.get_sentiment_score_list(reg_train)
+reg_test_sent = sentiment_features.get_sentiment_score_list(reg_test)
+
+print('Preparing Rating contrast vectors')
+sarc_train_rating, _ = sentiment_features.get_rating_contrast(sarc_train, sarc_train_sent)
+sarc_test_rating, _ = sentiment_features.get_rating_contrast(sarc_test, sarc_test_sent)
+reg_train_rating, _ = sentiment_features.get_rating_contrast(reg_train, reg_train_sent)
+reg_test_rating, _ = sentiment_features.get_rating_contrast(reg_test, reg_test_sent)
+
+print('Sentiment features added')
+# Lexical features
+
+# POS features
+
+# Classification
+
+print('Preparing feature vectors of individual dataset')
+sarc_train_features = classification.get_feature_vector([sarc_train_sent, sarc_train_rating])
+sarc_test_features = classification.get_feature_vector([sarc_test_sent, sarc_test_rating])
+reg_train_features = classification.get_feature_vector([reg_train_sent, reg_train_rating])
+reg_test_features = classification.get_feature_vector([reg_test_sent, reg_test_rating])
+
+print('Training and testing classifier')
+classifier = classification.get_classifier(sarc_train_features, reg_train_features)
+classification.test_classifier(classifier, sarc_test_features, reg_test_features)
+# End of code
+print('The end!')
